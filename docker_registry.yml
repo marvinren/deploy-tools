@@ -1,0 +1,34 @@
+---
+- hosts: docker_registry
+  vars:
+  - registry_ip: 10.12.2.147
+  - registry_port: 5050
+  tasks:
+  - name: Curl the register url
+    shell: 'docker ps |grep registry'
+    register: ping_result
+    ignore_errors: True
+  - name: Run A Docker Registry
+    shell: 'docker run -d --name registry -p {{ registry_port }}:5000 --restart=always -v /data2/registry/:/var/lib/registry/ registry:2.6.0'
+    when: ping_result.rc == 1
+
+- hosts: docker_registry
+  vars:
+  - registry_ip: 10.12.2.147
+  - registry_port: 5050
+  tasks:
+   - name: add dns map to /etc/hosts
+     shell: 'sed -i "/hub.test.asiainfo.com/d" /etc/hosts && echo "{{registry_ip}} hub.test.asiainfo.com" >> /etc/hosts'
+   - name: Copy the daemon.json to /etc/docker/daemon.json
+     template: 
+       src: ./daemon.json
+       dest: /etc/docker/daemon.json
+       mode: 0755
+     notify:
+      - Restart Docker
+
+  handlers:
+   - name: Restart Docker
+     service:
+       name: docker
+       state: restarted    

@@ -1,0 +1,5 @@
+{
+  "registry-mirrors": ["https://registry.docker-cn.com", "http://hub.test.asiainfo.com:{{registry_port}}"], 
+  "insecure-registries": ["hub.test.asiainfo.com:{{registry_port}}"],
+  "max-concurrent-downloads": 6
+}
