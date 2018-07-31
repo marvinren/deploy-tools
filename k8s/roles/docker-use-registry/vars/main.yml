@@ -1,0 +1,4 @@
+---
+# vars file for docker-use-registry
+registry_domain: hub.asiainfo.com
+registry_ip: 10.12.2.147

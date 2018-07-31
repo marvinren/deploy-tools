@@ -1,5 +1,7 @@
 ---
 - hosts: docker_registry
+  become: True
+  become_user: root
   vars:
   - registry_ip: 10.12.2.147
   - registry_port: 5050

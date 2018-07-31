@@ -1,0 +1,9 @@
+---
+- hosts: k8s-node
+  remote_user: root
+  become: yes
+  become_method: sudo
+
+  roles:
+    #- docker-registry
+    - docker-use-registry

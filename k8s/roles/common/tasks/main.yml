@@ -1,0 +1,8 @@
+---
+- name: Move the old repo file.
+  shell: mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+  ignore_errors: True
+
+- name: Install Aliyun Source.
+  get_url: url=http://mirrors.163.com/.help/CentOS7-Base-163.repo dest=/etc/yum.repos.d/CentOS-Base.repo
+

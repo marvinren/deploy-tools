@@ -1,0 +1,4 @@
+---
+# handlers file for docker-use-registry
+- name: restart docker
+  service: name=docker enabled=yes state=restarted

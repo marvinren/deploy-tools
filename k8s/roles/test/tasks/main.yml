@@ -1,0 +1,22 @@
+---
+- name: say 'hello'
+  command: echo 'hello world'
+  register: result
+
+- name: print stdout
+  debug:
+    msg: "{{ result }}"
+
+- name: check
+  stat:
+    path: /etc/issue
+  register: stat_etc_issue
+
+- name: print status
+  debug: 
+    msg: "{{ stat_etc_issue }}"
+
+- name: status debug
+  debug: 
+    msg: "============================"
+  when: stat_etc_issue.stat.exists == true

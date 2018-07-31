@@ -1,0 +1,43 @@
+---
+# tasks file for docker-registry
+
+- name: Pull the Register:2 image.
+  shell: 'docker pull registry:2'
+
+- name: Create the certificate directory
+  file:
+    dest: /data2/docker_registry/certs
+    owner: root
+    group: root
+    state: directory
+
+- name: Copy the certificate file to the docker registry server
+  copy:
+    src: "{{ item }}"
+    dest: /data2/docker_registry/certs/.
+  with_items:
+    - domain.crt
+    - domain.key
+
+- name: Create Register's auth directory
+  file:
+    dest: /data2/docker_registry/auth
+    owner: root
+    group: root
+    state: directory
+
+# UserAndPassword admin/123456
+- name: Copy the auth file to Server
+  copy:
+    src: htpasswd
+    dest: /data2/docker_registry/auth/.
+
+
+- name: start docker(Registry:v2)
+  shell: docker run -d -p 5050:5000 --restart=always --name registry \
+    -v /data2/docker_registry/auth:/auth -e "REGISTRY_AUTH=htpasswd" \
+    -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm" \
+    -e "REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd" \
+    -v /data2/docker_registry/certs:/certs \
+    -e "REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt" \
+    -e "REGISTRY_HTTP_TLS_KEY=/certs/domain.key" registry:2
