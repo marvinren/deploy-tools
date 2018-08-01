@@ -14,14 +14,14 @@
   get_url: url=http://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-8/v8.5.32/bin/apache-tomcat-8.5.32.tar.gz dest=/opt/apache-tomcat-8.5.32.tar.gz
 
 - name: Extract archieve
-  command: chdir=/usr/chare tar xvf /opt/apache-tomcat-8.5.32.tar.gz -C /opt/ creates=/opt/apache-tomcat-8.5.32
+  command: tar xvf /opt/apache-tomcat-8.5.32.tar.gz -C /opt/ creates=/opt/apache-tomcat-8.5.32
 
 - name: Symlink install directory
   file: src=/opt/apache-tomcat-8.5.32 path=/usr/share/tomcat state=link
 
 - name: Change ownership of Tomcat installation
   file: path=/usr/share/tomcat/ owner=tomcat group=tomcat state=directory recurse=yes
- 
+
 - name: Configure Tomcat Server(server.xml)
   template: src=server.xml dest=/usr/share/tomcat/conf/
   notify: restart tomcat  
@@ -31,23 +31,23 @@
   notify: restart tomcat
 
 - name: Install Tomcat init script
-  copy: src=tomcat-initscript.sh dest/etc/init.d/tomcat mode=0755
+  copy: src=tomcat-initscript.sh dest=/etc/init.d/tomcat mode=0755
 
-- name: insert iptables rule:add http_port
-  lineinfile: dest=/etc/sysconfig/iptables state=present regexp="{{ http_port }}" insertafter="^:OUTPUT " line="-A INPUT -p tcp  --dport {{ http_port }} -j  ACCEPT"
-  notify: restart iptables
+# - name: insert iptables rule:add http_port
+#   lineinfile: dest=/etc/sysconfig/iptables state=present regexp="{{ http_port }}" insertafter="^:OUTPUT " line="-A INPUT -p tcp  --dport {{ http_port }} -j  ACCEPT"
+#   notify: restart iptables
 
-- name: insert iptables rule:add https_port
-  lineinfile: dest=/etc/sysconfig/iptables state=present regexp="{{ https_port }}" insertafter="^:OUTPUT " line="-A INPUT -p tcp --dport {{ https_port }} -j ACCEPT"
-  notify: restart iptables
+# - name: insert iptables rule:add https_port
+#   lineinfile: dest=/etc/sysconfig/iptables state=present regexp="{{ https_port }}" insertafter="^:OUTPUT " line="-A INPUT -p tcp --dport {{ https_port }} -j ACCEPT"
+#   notify: restart iptables
 
-- name: insert firewalld rule for tomcat http port
-  firewalld: port={{ http_port }}/tcp permanent=true state=enabled immediate=yes
-  when: "ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'"
+# - name: insert firewalld rule for tomcat http port
+#   firewalld: port={{ http_port }}/tcp permanent=true state=enabled immediate=yes
+#   when: "ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'"
 
-- name: insert firewalld rule for tomcat https port
-  firewalld: port={{ https_port }}/tcp permanent=true state=enabled immediate=yes
-  when: "ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'"
+# - name: insert firewalld rule for tomcat https port
+#   firewalld: port={{ https_port }}/tcp permanent=true state=enabled immediate=yes
+#   when: "ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'"
 
-- name: wait for tomcat to start
-  wait_for: port={{http_port}}
+# - name: wait for tomcat to start
+#   wait_for: port={{http_port}}

@@ -1,0 +1,40 @@
+---
+- hosts: db
+  remote_user: root
+  become: yes
+  become_method: sudo
+  roles:
+    - mysql
+
+- hosts: static
+  remote_user: root
+  become: yes
+  become_method: sudo
+  roles:
+    - java
+    - nodejs
+    - nginx
+    - vsftpd
+  vars:
+    redis_bind: 127.0.0.1
+    vsftpd_users:
+       - username: admin
+         name: administrator
+         # python -c 'import crypt; print crypt.crypt("admin", "admin")
+         password: adpexzg3FUZAk
+    vsftpd_config:
+      log_ftp_protocol: YES
+      local_enable: YES
+      write_enable: YES
+      xferlog_enable: YES
+      listen_port: 21
+
+- hosts: app
+  remote_user: root
+  become: yes
+  become_method: sudo
+  roles:
+    - java
+    - tomcat
+    - redis
+
