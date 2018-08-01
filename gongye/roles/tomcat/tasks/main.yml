@@ -24,11 +24,11 @@
 
 - name: Configure Tomcat Server(server.xml)
   template: src=server.xml dest=/usr/share/tomcat/conf/
-  notify: restart tomcat  
+  #notify: restart tomcat  
 
 - name: Configure Tomcat User(tomcat-user.xml)
   template: src=tomcat-users.xml dest=/usr/share/tomcat/conf/
-  notify: restart tomcat
+  #notify: restart tomcat
 
 - name: Install Tomcat init script
   copy: src=tomcat-initscript.sh dest=/etc/init.d/tomcat mode=0755
