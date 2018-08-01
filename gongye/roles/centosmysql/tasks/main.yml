@@ -1,0 +1,8 @@
+--
+- name: "Download rpm from mysql repository."
+  get_url: 
+    url: "http://dev.mysql.com/get/mysql57-community-release-el7-10.noarch.rpm"
+    dest: /tmp/mysql57-community-release-el7-10.noarch.rpm
+
+- name: "Install mysql rpm."
+  shell: "yum -y install /tmp/mysql57-community-release-el7-10.noarch.rpm&&yum -y install mysql-community-server"
